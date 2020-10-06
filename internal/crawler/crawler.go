@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -39,6 +40,7 @@ func GetWebsiteHTML(assetSymbol string) *goquery.Document {
 	asset := GetAsset(assetSymbol)
 
 	webSiteURL := "https://statusinvest.com.br/fundos-imobiliarios/" + asset.Symbol
+	pageNotFoundElement := "#main-2 > section > div > h1"
 
 	// Request the HTML page.
 	res, err := http.Get(webSiteURL)
@@ -54,6 +56,13 @@ func GetWebsiteHTML(assetSymbol string) *goquery.Document {
 	html, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	pageNotFound := html.Find(pageNotFoundElement).Text()
+
+	if len(pageNotFound) > 0 {
+		fmt.Fprintf(os.Stderr, "\n\nError: %v\n", "Asset does not exist")
+		os.Exit(0)
 	}
 
 	return html
@@ -98,6 +107,17 @@ func BuildAsset(assetSymbol string) *Asset {
 	asset.Symbol = assetSymbol
 	asset.Price = GetSymbolPrice(assetSymbol)
 	asset.Yield = GetSymbolYield(assetSymbol)
+
+	return asset
+}
+
+//BuildAsset builds the asset info
+func BuildAssetStr(assetSymbol string) *AssetString {
+	asset := new(AssetString)
+
+	asset.Symbol = assetSymbol
+	asset.Price = ""
+	asset.Yield = ""
 
 	return asset
 }
