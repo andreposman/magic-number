@@ -3,70 +3,76 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
-	"strconv"
 	"strings"
 
-	"github.com/andreposman/magic-number/internal/crawler"
-	"github.com/olekukonko/tablewriter"
+	"github.com/andreposman/magic-number/internal/config"
+	"github.com/andreposman/magic-number/internal/crawler/controller"
 )
 
+/*
+List of TODOs:
+	TODO: struct for asset
+	TODO: logs
+	TODO: modularize program (table writer, crawler, bussiness rules)
+	TODO: pattern for folders and code
+	TODO: more validations
+	TODO: README
+	TODO: Find out if is viable format float to BRL
+*/
+
 func main() {
+	a := config.DebugData(true)
+	controller.GetAsset(a)
 
 	// assetSymbol := readAssetSymbolFromTerminal()
-	assetSymbol := "HGLG11"
+	// // assetSymbol := "HGLG11"
 
-	var desiredMonthlyIncome float64 = 1000
-	asset := crawler.BuildAsset(assetSymbol)
+	// var desiredMonthlyIncome float64 = 1000
+	// asset := crawler.BuildAsset(assetSymbol)
 
-	assetQuantityMagicNumber := math.Round(calculateMagicNumber(asset.Price, asset.Yield))
-	capitalInvestedSnowBall := (calculateCapitalInvestedSnowball(asset.Price, assetQuantityMagicNumber))
-	capitalInvestedForMonthlyDesiredIncome := (calculateDesiredMonthlyIncome(asset.Price, asset.Yield, desiredMonthlyIncome))
+	// assetQuantityMagicNumber := math.Round(calculateMagicNumber(asset.Price, asset.YieldAvarage24M))
+	// capitalInvestedSnowBall := (calculateCapitalInvestedSnowball(asset.Price, assetQuantityMagicNumber))
+	// capitalInvestedForMonthlyDesiredIncome := (calculateDesiredMonthlyIncome(asset.Price, asset.YieldAvarage24M, desiredMonthlyIncome))
 
-	// assetString, assetQuantityMagicNumberString,  := crawler.FormatDataForDisplay(asset, assetQuantityMagicNumber, capitalInvestedSnowBall, capitalInvestedForMonthlyDesiredIncome)
-	assetStr := crawler.BuildAssetStr(assetSymbol)
+	// assetStr := crawler.BuildAssetStr(assetSymbol)
+	// desiredMonthlyIncomeStr := strconv.FormatFloat(desiredMonthlyIncome, 'f', 2, 64)
+	// assetStr.Symbol = asset.Symbol
+	// assetStr.Price = "R$ " + strconv.FormatFloat(asset.Price, 'f', 3, 64)
+	// assetStr.Yield = "R$ " + strconv.FormatFloat(asset.Yield, 'f', 5, 64)
 
-	assetStr.Symbol = asset.Symbol
-	assetStr.Price = "R$ " + strconv.FormatFloat(asset.Price, 'f', 3, 64)
-	assetStr.Yield = "R$ " + strconv.FormatFloat(asset.Yield, 'f', 5, 64)
+	// assetQuantityMagicNumberStr := strconv.FormatFloat(assetQuantityMagicNumber, 'f', 0, 64)
+	// capitalInvestedSnowBallStr := "R$ " + strconv.FormatFloat(capitalInvestedSnowBall, 'f', 2, 64)
+	// capitalInvestedForMonthlyDesiredIncomeStr := "R$ " + strconv.FormatFloat(capitalInvestedForMonthlyDesiredIncome, 'f', 2, 64)
 
-	assetQuantityMagicNumberStr := strconv.FormatFloat(assetQuantityMagicNumber, 'f', 0, 64)
-	capitalInvestedSnowBallStr := "R$ " + strconv.FormatFloat(capitalInvestedSnowBall, 'f', 2, 64)
-	capitalInvestedForMonthlyDesiredIncomeStr := "R$ " + strconv.FormatFloat(capitalInvestedForMonthlyDesiredIncome, 'f', 2, 64)
+	// data := [][]string{
+	// 	[]string{
+	// 		// assetStr.Symbol,
+	// 		"R$ " + strconv.FormatFloat(asset.Price, 'f', 3, 64),
+	// 		// asset.YieldAvarage24M,
+	// 		// assetQuantityMagicNumber,
+	// 		// capitalInvestedSnowBall,
+	// 		// capitalInvestedForMonthlyDesiredIncome
+	// 	}}
 
-	data := [][]string{
-		[]string{
-			assetStr.Symbol,
-			assetStr.Price,
-			assetStr.Yield,
-			assetQuantityMagicNumberStr,
-			capitalInvestedSnowBallStr,
-			capitalInvestedForMonthlyDesiredIncomeStr}}
-
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{
-		"ASSET NAME",
-		"ASSET PRICE",
-		"ASSET YIELD (24M)",
-		"MAGIC NUMBER (QTY)",
-		"CAPITAL FOR SNOWBALL EFFECT",
-		"CAPITAL FOR DESIRED MONTHLY INCOME"})
-	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
-	table.SetCenterSeparator("|")
-	table.AppendBulk(data)
-	table.Render()
-
-	fmt.Printf("\n|--------------------------------------------------------------------------|")
-	fmt.Printf("\n|-> Asset Name: %s", asset.Symbol)
-	fmt.Printf("\n|-> Asset Price: R$%.2f", asset.Price)
-	fmt.Printf("\n|-> Asset Yield: R$%.3f", asset.Yield)
-	fmt.Println("\n|--------------------------------------------------------------------------|")
-	fmt.Printf("|- Asset Quantity for Snowball Effect: %.0f\n", assetQuantityMagicNumber)
-	fmt.Printf("|- Capital Invested for SnowBall Effect: R$ %.2f \n", capitalInvestedSnowBall)
-	fmt.Println("|--------------------------------------------------------------------------|")
-	fmt.Printf("|- Capital Invested for Monthly Desired Income of R$ 1000: R$ %.2f \n", capitalInvestedForMonthlyDesiredIncome)
-	fmt.Println("|--------------------------------------------------------------------------|")
+	// table := tablewriter.NewWriter(os.Stdout)
+	// table.SetHeader([]string{
+	// 	"ASSET\nNAME",
+	// 	"ASSET\nPRICE",
+	// 	"ASSET YIELD\n(24M)",
+	// 	"MAGIC NUMBER\n(QTY)",
+	// 	"CAPITAL FOR\nSNOWBALL EFFECT",
+	// "CAPITAL FOR \n DESIRED MONTHLY INCOME OF R$" + desiredMonthlyIncome
+	// })
+	// table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
+	// table.SetAutoWrapText(false)
+	// table.SetCenterSeparator("|")
+	// table.SetRowSeparator("-")
+	// table.SetHeaderAlignment(tablewriter.ALIGN_CENTER)
+	// table.SetAlignment(tablewriter.ALIGN_CENTER)
+	// table.AppendBulk(data)
+	// table.Render()
+	// fmt.Print("\n")
 }
 
 func readAssetSymbolFromTerminal() string {
@@ -82,7 +88,7 @@ func readAssetSymbolFromTerminal() string {
 	assetSymbol = strings.TrimSpace(assetSymbol)
 	assetSymbol = strings.ToUpper(assetSymbol)
 
-	fmt.Printf("\nLoading...\n")
+	fmt.Printf("\nLoading...\n\n\n")
 
 	return assetSymbol
 }
