@@ -1,16 +1,16 @@
 package asset
 
-//AssetElements is the model of the asset elements scrapped by the crawler
-type AssetElements struct {
-	Symbol               string //`json:"symbol,omitempty"`
-	Name                 string //`json:"name,omitempty"`
-	Price                string //`json:"price,omitempty"`
-	YieldAvarage24M      string //`json:"yieldAvarage24M,omitempty"`
-	DividendYield        string //`json:"dividendYield,omitempty"`
-	MinPrice52Week       string //`json:"MinPrice52Week,omitempty"`
-	MaxPrice52Week       string //`json:"MaxPrice52Week,omitempty"`
-	PerformanceLast12M   string //`json:"PerformanceLast12M,omitempty"`
-	PerformanceThisMonth string //`json:"PerformanceThisMonth,omitempty"`
+//AssetString is the model of the asset elements scrapped by the crawler
+type AssetString struct {
+	Symbol               string
+	Name                 string
+	Price                string
+	YieldAvarage24M      string
+	DividendYield        string
+	MinPrice52Week       string
+	MaxPrice52Week       string
+	PerformanceLast12M   string
+	PerformanceThisMonth string
 }
 
 //Asset is the strongly typed model

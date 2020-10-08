@@ -69,7 +69,7 @@ func GetAsset(req string) *assetModel.Asset {
 func findAsset(req string) *assetModel.Asset {
 	asset := new(assetModel.Asset)
 	HTML := GetHTML(req)
-	assetElements := assetModel.AssetElements{
+	assetElements := assetModel.AssetString{
 		Symbol:               req,
 		Name:                 "#main-header > div > div > div:nth-child(1) > h1 > small",
 		Price:                "#main-2 > div.container.pb-7 > div.top-info.d-flex.flex-wrap.justify-between.mb-3.mb-md-5 > div.info.special.w-100.w-md-33.w-lg-20 > div > div:nth-child(1) > strong",
