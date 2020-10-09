@@ -59,15 +59,15 @@ func GetHTML(req string) *goquery.Document {
 }
 
 //GetAsset returns the asset in float
-func GetAsset(req string) *assetModel.Asset {
+func GetAsset(req string) *assetModel.AssetString {
 	asset := findAsset(req)
 
 	return asset
 }
 
 //findAsset finds and parse the asset from the page
-func findAsset(req string) *assetModel.Asset {
-	asset := new(assetModel.Asset)
+func findAsset(req string) *assetModel.AssetString {
+	asset := new(assetModel.AssetNumber)
 	HTML := GetHTML(req)
 	assetElements := assetModel.AssetString{
 		Symbol:               req,

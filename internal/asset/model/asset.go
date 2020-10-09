@@ -13,8 +13,8 @@ type AssetString struct {
 	PerformanceThisMonth string
 }
 
-//Asset is the strongly typed model
-type Asset struct {
+//AssetNumber is the strongly typed model
+type AssetNumber struct {
 	Symbol               string
 	Name                 string
 	Price                float64
@@ -24,4 +24,37 @@ type Asset struct {
 	MaxPrice52Week       float64
 	PerformanceLast12M   string
 	PerformanceThisMonth string
+}
+
+//Goals has the information for the investor about capital needed to achieve some goals
+type Goals struct {
+	MagicNumber                 float64
+	CapitalSnowBallEffect       float64
+	DesiredMonthlyIncome        float64
+	CapitalDesiredMonthlyIncome float64
+}
+
+//GoalsString has the information for the investor about capital needed to achieve some goals
+type GoalsString struct {
+	MagicNumber                 string
+	CapitalSnowBallEffect       string
+	DesiredMonthlyIncome        string
+	CapitalDesiredMonthlyIncome string
+}
+
+type RequestAsset struct {
+	AssetSymbol          string
+	DesiredMonthlyIncome string
+}
+
+//ToStringConverted is the result of float64 to string
+type ToStringConverted struct {
+	AssetString           AssetString
+	InvestmentGoalsString GoalsString
+}
+
+//ToNumberConverted is the result of string to float64
+type ToNumberConverted struct {
+	Asset           AssetNumber
+	InvestmentGoals Goals
 }

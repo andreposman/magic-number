@@ -1,18 +1,14 @@
 package investment
 
-import "math"
+import (
+	"math"
 
-//Goals has the information for the investor about capital needed to achieve some goals
-type Goals struct {
-	MagicNumber                 float64
-	CapitalSnowBallEffect       float64
-	DesiredMonthlyIncome        float64
-	CapitalDesiredMonthlyIncome float64
-}
+	asset "github.com/andreposman/magic-number/internal/asset/model"
+)
 
 //CalculateGoals ...
-func CalculateGoals(assetPrice float64, assetYieldAvarage24M float64, desiredMonthlyIncome float64) *Goals {
-	goals := new(Goals)
+func CalculateGoals(assetPrice float64, assetYieldAvarage24M float64, desiredMonthlyIncome float64) *asset.Goals {
+	goals := new(asset.Goals)
 
 	goals.DesiredMonthlyIncome = desiredMonthlyIncome
 	goals.MagicNumber = math.Round(calculateMagicNumber(assetPrice, assetYieldAvarage24M))

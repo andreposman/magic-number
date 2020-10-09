@@ -27,7 +27,7 @@ type AssetTable struct {
 }
 
 //PrintDataTable print a "pretty" table on the terminal
-func PrintDataTable(asset *assetModel.Asset, desiredMonthlyIncome float64) {
+func PrintDataTable(asset *assetModel.AssetNumber, desiredMonthlyIncome float64) {
 	goals := investment.CalculateGoals(asset.Price, asset.YieldAvarage24M, desiredMonthlyIncome)
 	a := convertAssetToString(asset, goals, desiredMonthlyIncome)
 
@@ -86,7 +86,7 @@ func PrintDataTable(asset *assetModel.Asset, desiredMonthlyIncome float64) {
 	fmt.Print("\n")
 }
 
-func convertAssetToString(asset *assetModel.Asset, goals *investment.Goals, desiredMonthlyIncome float64) *AssetTable {
+func convertAssetToString(asset *assetModel.AssetNumber, goals *assetModel.Goals, desiredMonthlyIncome float64) *AssetTable {
 	a := new(AssetTable)
 
 	a.Symbol = asset.Symbol
