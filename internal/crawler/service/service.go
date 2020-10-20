@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -52,25 +51,19 @@ func GetHTML(req string) *goquery.Document {
 	AssetNotFound := HTML.Find(NotFoundElement).Text()
 	if len(AssetNotFound) > 0 {
 		fmt.Fprintf(os.Stderr, "\n\nError: %v\n", "Asset does not exist")
-		os.Exit(0)
+		os.Exit(-1)
 	}
 
 	return HTML
 }
 
-//GetAsset returns the asset in float
-func GetAsset(req string) *assetModel.AssetString {
-	asset := findAsset(req)
-
-	return asset
-}
-
-//findAsset finds and parse the asset from the page
-func findAsset(req string) *assetModel.AssetString {
-	asset := new(assetModel.AssetNumber)
-	HTML := GetHTML(req)
-	assetElements := assetModel.AssetString{
-		Symbol:               req,
+//FindAsset finds and parse the asset from the page
+func FindAsset(req *assetModel.Request) *assetModel.Model {
+	asset := new(assetModel.Model)
+	a := req.AssetSymbol
+	HTML := GetHTML(a)
+	assetElements := assetModel.Model{
+		Symbol:               req.AssetSymbol,
 		Name:                 "#main-header > div > div > div:nth-child(1) > h1 > small",
 		Price:                "#main-2 > div.container.pb-7 > div.top-info.d-flex.flex-wrap.justify-between.mb-3.mb-md-5 > div.info.special.w-100.w-md-33.w-lg-20 > div > div:nth-child(1) > strong",
 		YieldAvarage24M:      "#main-2 > div.container.pb-7 > div:nth-child(6) > div > div > div:nth-child(1) > div > div > strong",
@@ -81,27 +74,12 @@ func findAsset(req string) *assetModel.AssetString {
 		PerformanceThisMonth: "#main-2 > div.container.pb-7 > div.top-info.d-flex.flex-wrap.justify-between.mb-3.mb-md-5 > div:nth-child(5) > div > div.d-flex.justify-between > div > span.sub-value > b",
 	}
 
-	symbol := strings.TrimSpace(strings.ToUpper(req))
-	price, err := strconv.ParseFloat(strings.Replace(HTML.Find(assetElements.Price).Text(), ",", ".", 1), 2)
-	if err != nil {
-		fmt.Println(err)
-	}
-	yieldAvarage24M, err := strconv.ParseFloat(strings.Replace(HTML.Find(assetElements.YieldAvarage24M).Text(), ",", ".", 1), 5)
-	if err != nil {
-		fmt.Println(err)
-	}
-	dividendYield, err := strconv.ParseFloat(strings.Replace(HTML.Find(assetElements.DividendYield).Text(), ",", ".", 1), 2)
-	if err != nil {
-		fmt.Println(err)
-	}
-	minPrice52Week, err := strconv.ParseFloat(strings.Replace(HTML.Find(assetElements.MinPrice52Week).Text(), ",", ".", 1), 2)
-	if err != nil {
-		fmt.Println(err)
-	}
-	maxPrice52Week, err := strconv.ParseFloat(strings.Replace(HTML.Find(assetElements.MaxPrice52Week).Text(), ",", ".", 1), 2)
-	if err != nil {
-		fmt.Println(err)
-	}
+	symbol := strings.TrimSpace(strings.ToUpper(req.AssetSymbol))
+	price := strings.Replace(HTML.Find(assetElements.Price).Text(), ",", ".", 1)
+	yieldAvarage24M := strings.Replace(HTML.Find(assetElements.YieldAvarage24M).Text(), ",", ".", 1)
+	dividendYield := strings.Replace(HTML.Find(assetElements.DividendYield).Text(), ",", ".", 1)
+	minPrice52Week := strings.Replace(HTML.Find(assetElements.MinPrice52Week).Text(), ",", ".", 1)
+	maxPrice52Week := strings.Replace(HTML.Find(assetElements.MaxPrice52Week).Text(), ",", ".", 1)
 
 	asset.Symbol = symbol
 	asset.Name = HTML.Find(assetElements.Name).Text()
@@ -112,6 +90,7 @@ func findAsset(req string) *assetModel.AssetString {
 	asset.MaxPrice52Week = maxPrice52Week
 	asset.PerformanceLast12M = HTML.Find(assetElements.PerformanceLast12M).Text()
 	asset.PerformanceThisMonth = HTML.Find(assetElements.PerformanceThisMonth).Text()
+	asset.Goals.DesiredMonthlyIncome = req.DesiredMonthlyIncome
 
 	return asset
 }

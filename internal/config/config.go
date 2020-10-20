@@ -2,18 +2,20 @@ package config
 
 //DEBUG struct to help debugging
 type DEBUG struct {
-	ASSET string
+	Asset                string
+	DesiredMonthlyIncome string
 }
 type ENV struct {
 	URL string
 }
 
 //DebugData returns data to help debugging
-func DebugData(isDebug bool) string {
+func DebugData() *DEBUG {
 	debug := new(DEBUG)
-	debug.ASSET = "HGLG11"
+	debug.Asset = "HGLG11"
+	debug.DesiredMonthlyIncome = "1000"
 
-	return debug.ASSET
+	return debug
 }
 
 func GetURL() string {

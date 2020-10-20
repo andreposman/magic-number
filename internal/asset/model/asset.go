@@ -1,20 +1,21 @@
 package asset
 
-//AssetString is the model of the asset elements scrapped by the crawler
-type AssetString struct {
-	Symbol               string
-	Name                 string
-	Price                string
-	YieldAvarage24M      string
-	DividendYield        string
-	MinPrice52Week       string
-	MaxPrice52Week       string
-	PerformanceLast12M   string
-	PerformanceThisMonth string
+//Model is the model of the asset elements scrapped by the crawler
+type Model struct {
+	Symbol               string `json:"symbol"`
+	Name                 string `json:"name"`
+	Price                string `json:"price"`
+	YieldAvarage24M      string `json:"yieldAvarage24m"`
+	DividendYield        string `json:"dividendYield"`
+	MinPrice52Week       string `json:"minPrice52wk"`
+	MaxPrice52Week       string `json:"maxPrice52wk"`
+	PerformanceLast12M   string `json:"performanceLast12m"`
+	PerformanceThisMonth string `json:"performanceThisMonth"`
+	Goals                Goals  `json:"goals"`
 }
 
-//AssetNumber is the strongly typed model
-type AssetNumber struct {
+//ModelFloat is the strongly typed model
+type ModelFloat struct {
 	Symbol               string
 	Name                 string
 	Price                float64
@@ -24,37 +25,54 @@ type AssetNumber struct {
 	MaxPrice52Week       float64
 	PerformanceLast12M   string
 	PerformanceThisMonth string
+	Goals                GoalsNumber
 }
 
-//Goals has the information for the investor about capital needed to achieve some goals
-type Goals struct {
+//GoalsNumber has the information for the investor about capital needed to achieve some goals
+type GoalsNumber struct {
 	MagicNumber                 float64
 	CapitalSnowBallEffect       float64
 	DesiredMonthlyIncome        float64
 	CapitalDesiredMonthlyIncome float64
 }
 
-//GoalsString has the information for the investor about capital needed to achieve some goals
-type GoalsString struct {
-	MagicNumber                 string
-	CapitalSnowBallEffect       string
-	DesiredMonthlyIncome        string
-	CapitalDesiredMonthlyIncome string
+//Goals has the information for the investor about capital needed to achieve some goals
+type Goals struct {
+	MagicNumber                 string `json:"magicNumber"`
+	CapitalSnowBallEffect       string `json:"capitalSnowBallEffect"`
+	DesiredMonthlyIncome        string `json:"desiredMonthlyIncome"`
+	CapitalDesiredMonthlyIncome string `json:"capitalDesiredMonthlyIncome"`
 }
 
-type RequestAsset struct {
+type Request struct {
 	AssetSymbol          string
 	DesiredMonthlyIncome string
 }
 
 //ToStringConverted is the result of float64 to string
 type ToStringConverted struct {
-	AssetString           AssetString
-	InvestmentGoalsString GoalsString
+	Asset      Model `json:"asset"`
+	Investment Goals `json:"investment"`
 }
 
 //ToNumberConverted is the result of string to float64
 type ToNumberConverted struct {
-	Asset           AssetNumber
-	InvestmentGoals Goals
+	Asset           ModelFloat
+	InvestmentGoals GoalsNumber
+}
+
+type DataTable struct {
+	Symbol                      string
+	Name                        string
+	Price                       string
+	YieldAvarage24M             string
+	DividendYield               string
+	MinPrice52Week              string
+	MaxPrice52Week              string
+	PerformanceLast12M          string
+	PerformanceThisMonth        string
+	DesiredMonthlyIncome        string
+	MagicNumber                 string
+	CapitalSnowBallEffect       string
+	CapitalDesiredMonthlyIncome string
 }

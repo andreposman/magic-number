@@ -1,107 +1,137 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
-	"github.com/andreposman/magic-number/internal/asset/investment"
 	assetModel "github.com/andreposman/magic-number/internal/asset/model"
 	"github.com/olekukonko/tablewriter"
 )
 
-type AssetTable struct {
-	Symbol                      string
-	Name                        string
-	Price                       string
-	YieldAvarage24M             string
-	DividendYield               string
-	MinPrice52Week              string
-	MaxPrice52Week              string
-	PerformanceLast12M          string
-	PerformanceThisMonth        string
-	DesiredMonthlyIncome        string
-	MagicNumber                 string
-	CapitalSnowBallEffect       string
-	CapitalDesiredMonthlyIncome string
-}
-
 //PrintDataTable print a "pretty" table on the terminal
-func PrintDataTable(asset *assetModel.AssetNumber, desiredMonthlyIncome float64) {
-	goals := investment.CalculateGoals(asset.Price, asset.YieldAvarage24M, desiredMonthlyIncome)
-	a := convertAssetToString(asset, goals, desiredMonthlyIncome)
+func PrintDataTable(asset *assetModel.ToStringConverted) {
+	fmt.Printf("\n\n")
 
 	dataAsset := [][]string{
 		[]string{
-			a.Symbol,
-			a.Name,
-			a.Price,
-			a.YieldAvarage24M,
-			a.DividendYield,
-			a.MinPrice52Week,
-			a.MaxPrice52Week,
-			a.PerformanceLast12M,
-			a.PerformanceThisMonth,
+			"\n" + asset.Asset.Symbol,
+			"\n" + asset.Asset.Name,
+			"\n" + "R$" + asset.Asset.Price,
+			"\n" + "R$" + asset.Asset.YieldAvarage24M,
+			"\n" + asset.Asset.DividendYield + "%",
+			"\n" + "R$" + asset.Asset.MinPrice52Week,
+			"\n" + "R$" + asset.Asset.MaxPrice52Week,
+			"\n" + asset.Asset.PerformanceLast12M,
+			"\n" + asset.Asset.PerformanceThisMonth,
 		}}
 
 	tableAsset := tablewriter.NewWriter(os.Stdout)
 	tableAsset.SetHeader([]string{
-		"ASSET \nSYMBOL",
-		"ASSET \nNAME",
-		"ASSET \nPRICE",
-		"ASSET \nYIELD AVARAGE (24M)",
-		"DIVIDEND \nYIELD",
-		"MIN PRICE \n52 WK",
-		"MAX PRICE \n52 WK",
-		"PERFORMANCE \nLAST 12M",
-		"PERFORMANCE \nTHIS MONTH",
+		"\nASSET SYMBOL",
+		"\nASSET NAME",
+		"\nASSET PRICE",
+		"\nYIELD \nAVARAGE(24M)",
+		"\nDIVIDEND \nYIELD",
+		"\nMIN. PRICE \n52 WK",
+		"\nMAX. PRICE \n52 WK",
+		"\nPERFORMANCE \nLAST 12M",
+		"\nPERFORMANCE \nTHIS MONTH",
 	})
 	tableAsset.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
-	tableAsset.SetAutoWrapText(true)
+	tableAsset.SetCenterSeparator(".")
+	tableAsset.SetColumnSeparator("|")
+	tableAsset.SetRowSeparator("_")
+	tableAsset.SetAutoWrapText(false)
+	tableAsset.SetAutoFormatHeaders(false)
+	tableAsset.SetReflowDuringAutoWrap(false)
 	tableAsset.SetHeaderAlignment(tablewriter.ALIGN_CENTER)
 	tableAsset.SetAlignment(tablewriter.ALIGN_CENTER)
 	tableAsset.AppendBulk(dataAsset)
 	tableAsset.Render()
-	fmt.Print("\n")
+	fmt.Printf("\n\n")
+
+	dataMagicNumber := [][]string{
+		[]string{
+			asset.Investment.MagicNumber,
+			"R$" + asset.Investment.CapitalSnowBallEffect,
+		}}
+
+	tableMagicNumber := tablewriter.NewWriter(os.Stdout)
+	tableMagicNumber.SetHeader([]string{
+		"MAGIC NUMBER\n(ASSET QTY)",
+		"CAPITAL FOR\nSNOWBALL EFFECT",
+	})
+	tableMagicNumber.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
+	tableMagicNumber.SetAutoWrapText(true)
+	tableMagicNumber.SetCenterSeparator(".")
+	tableMagicNumber.SetColumnSeparator("|")
+	tableMagicNumber.SetRowSeparator("_")
+	tableMagicNumber.SetHeaderAlignment(tablewriter.ALIGN_CENTER)
+	tableMagicNumber.SetAlignment(tablewriter.ALIGN_CENTER)
+	tableMagicNumber.AppendBulk(dataMagicNumber)
+	tableMagicNumber.Render()
+	fmt.Printf("\n\n")
 
 	dataCapital := [][]string{
 		[]string{
-			a.MagicNumber,
-			a.CapitalSnowBallEffect,
-			a.CapitalDesiredMonthlyIncome,
+			"R$" + asset.Investment.CapitalDesiredMonthlyIncome,
 		}}
 
 	tableCapital := tablewriter.NewWriter(os.Stdout)
 	tableCapital.SetHeader([]string{
-		"MAGIC NUMBER\n(ASSET QTY)",
-		"CAPITAL FOR\nSNOWBALL EFFECT",
-		"CAPITAL FOR\nDESIRED MONTHLY INCOME OF R$" + a.DesiredMonthlyIncome,
+		"CAPITAL FOR\nDESIRED MONTHLY INCOME OF R$" + asset.Investment.DesiredMonthlyIncome,
 	})
 	tableCapital.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
-	tableCapital.SetAutoWrapText(false)
+	tableCapital.SetAutoWrapText(true)
+	tableCapital.SetCenterSeparator(".")
+	tableCapital.SetColumnSeparator("|")
+	tableCapital.SetRowSeparator("_")
 	tableCapital.SetHeaderAlignment(tablewriter.ALIGN_CENTER)
 	tableCapital.SetAlignment(tablewriter.ALIGN_CENTER)
 	tableCapital.AppendBulk(dataCapital)
 	tableCapital.Render()
-	fmt.Print("\n")
+	fmt.Printf("\n\n")
 }
 
-func convertAssetToString(asset *assetModel.AssetNumber, goals *assetModel.Goals, desiredMonthlyIncome float64) *AssetTable {
-	a := new(AssetTable)
+//ReadAssetSymbolFromTerminal ...
+func ReadAssetSymbolFromTerminal() string {
+	reader := bufio.NewReader(os.Stdin)
 
-	a.Symbol = asset.Symbol
-	a.Name = asset.Name
-	a.Price = "R$" + strconv.FormatFloat(asset.Price, 'f', 2, 64)
-	a.YieldAvarage24M = "R$" + strconv.FormatFloat(asset.YieldAvarage24M, 'f', 5, 64)
-	a.DividendYield = strconv.FormatFloat(asset.DividendYield, 'f', 2, 64) + "%"
-	a.MinPrice52Week = "R$" + strconv.FormatFloat(asset.MinPrice52Week, 'f', 2, 64)
-	a.MaxPrice52Week = "R$" + strconv.FormatFloat(asset.MaxPrice52Week, 'f', 2, 64)
-	a.PerformanceLast12M = asset.PerformanceLast12M
-	a.PerformanceThisMonth = asset.PerformanceThisMonth
-	a.DesiredMonthlyIncome = strconv.FormatFloat(desiredMonthlyIncome, 'f', 3, 64)
-	a.MagicNumber = strconv.FormatFloat(goals.MagicNumber, 'f', 0, 64)
-	a.CapitalSnowBallEffect = "R$" + strconv.FormatFloat(goals.CapitalSnowBallEffect, 'f', 2, 64)
-	a.CapitalDesiredMonthlyIncome = "R$" + strconv.FormatFloat(goals.CapitalDesiredMonthlyIncome, 'f', 5, 64)
+	fmt.Print("-> Enter the symbol of the asset: ")
+	assetSymbol, err := reader.ReadString('\n')
 
-	return a
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	assetSymbol = strings.TrimSpace(assetSymbol)
+	assetSymbol = strings.ToUpper(assetSymbol)
+
+	return assetSymbol
+}
+
+//ReadDesiredMonthlyIncomeFromTerminal ...
+func ReadDesiredMonthlyIncomeFromTerminal() string {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print("\n-> Enter the desired monthly income: ")
+	desiredMonthlyIncome, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println(err)
+	}
+	desiredMonthlyIncome = strings.TrimSpace(desiredMonthlyIncome)
+	desiredMonthlyIncome = strings.ToUpper(desiredMonthlyIncome)
+
+	f, err := strconv.ParseFloat(desiredMonthlyIncome, 32)
+	if f <= 0 || err != nil {
+		fmt.Printf("\nDesired monthly income must be a number, greater than 0.\n\n")
+		os.Exit(-1)
+	}
+
+	fmt.Printf("\nLoading...\n")
+
+	return desiredMonthlyIncome
 }

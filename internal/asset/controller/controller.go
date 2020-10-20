@@ -5,14 +5,23 @@ import (
 	"github.com/andreposman/magic-number/internal/asset/service"
 )
 
-func CalculateGoals(req string, desiredMonthlyIncome float64) *asset.Goals {
-	s := service.CalculateGoals(req, desiredMonthlyIncome)
+//CalculateGoals ...
+func CalculateGoals(asset *asset.Model) *asset.ToStringConverted {
+	s := service.CalculateGoals(asset)
 
 	return s
 }
 
-func ConvertAssetToString(asset *asset.AssetNumber) asset.AssetString {
-	// res := service.ConvertAssetToString(asset)
+//GetAsset ...
+func GetAsset(req *asset.Request) *asset.ToStringConverted {
+	a := service.GetAsset(req)
 
-	// return res
+	return a
+}
+
+//ReturnJSON ...
+func ReturnJSON(req *asset.ToStringConverted) []byte {
+	a := service.BuildJSON(req)
+
+	return a
 }
