@@ -1,11 +1,24 @@
 package asset
 
 //Model is the model of the asset elements scrapped by the crawler
+type Elements struct {
+	Symbol               string `json:"symbol"`
+	Name                 string `json:"name"`
+	Price                string `json:"price"`
+	YieldAverage24M      string `json:"yieldAverage24m"`
+	DividendYield        string `json:"dividendYield"`
+	MinPrice52Week       string `json:"minPrice52wk"`
+	MaxPrice52Week       string `json:"maxPrice52wk"`
+	PerformanceLast12M   string `json:"performanceLast12m"`
+	PerformanceThisMonth string `json:"performanceThisMonth"`
+}
+
+//Model is the model of the asset elements scrapped by the crawler
 type Model struct {
 	Symbol               string `json:"symbol"`
 	Name                 string `json:"name"`
 	Price                string `json:"price"`
-	YieldAvarage24M      string `json:"yieldAvarage24m"`
+	YieldAverage24M      string `json:"yieldAverage24m"`
 	DividendYield        string `json:"dividendYield"`
 	MinPrice52Week       string `json:"minPrice52wk"`
 	MaxPrice52Week       string `json:"maxPrice52wk"`

@@ -5,35 +5,39 @@ import (
 	"fmt"
 	"math"
 
-	asset "github.com/andreposman/magic-number/internal/asset/model"
 	assetModel "github.com/andreposman/magic-number/internal/asset/model"
 	"github.com/andreposman/magic-number/internal/crawler/service"
 	"github.com/andreposman/magic-number/internal/helpers/converter"
 )
 
 //GetAsset ...
-func GetAsset(req *asset.Request) *asset.ToStringConverted {
+func GetAsset(req *assetModel.Request) *assetModel.Model {
 	a := service.FindAsset(req)
-	asset := CalculateGoals(a)
+	asset := CalculateInvestmentGoals(a)
 
 	return asset
 }
 
-//CalculateGoals ...
-func CalculateGoals(asset *asset.Model) *assetModel.ToStringConverted {
-	a := converter.ToFloat(asset)
+//CalculateInvestmentGoals ...
+func CalculateInvestmentGoals(asset *assetModel.Model) *assetModel.Model {
+	fmt.Print("\nPrice: ", asset.Price)
+	price := converter.ToExpectedFloat(asset.Price)
 
-	a.InvestmentGoals.MagicNumber = calculateMagicNumber(a.Asset.Price, a.Asset.YieldAvarage24M)
-	a.InvestmentGoals.CapitalSnowBallEffect = calculateCapitalInvestedSnowball(a.Asset.Price, a.InvestmentGoals.MagicNumber)
-	a.InvestmentGoals.CapitalDesiredMonthlyIncome = calculateDesiredMonthlyIncome(a.Asset.Price, a.Asset.YieldAvarage24M, a.InvestmentGoals.DesiredMonthlyIncome)
+	fmt.Print("\nyieldAverage24M: ", asset.YieldAverage24M)
+	yieldAverage24M := converter.ToYieldAverageFloat(asset.YieldAverage24M)
 
-	aString := converter.ToString(a)
+	fmt.Print("\ndesiredMonthlyIncome: ", asset.Goals.DesiredMonthlyIncome)
+	desiredMonthlyIncome := converter.ToExpectedFloat(asset.Goals.DesiredMonthlyIncome)
 
-	return aString
+	asset.Goals.MagicNumber = converter.ToExpectedString(calculateMagicNumber(price, yieldAverage24M))
+	asset.Goals.CapitalSnowBallEffect = converter.ToExpectedString(calculateCapitalInvestedSnowball(price, converter.ToExpectedFloat(asset.Goals.MagicNumber)))
+	asset.Goals.CapitalDesiredMonthlyIncome = converter.ToExpectedString(calculateDesiredMonthlyIncome(price, yieldAverage24M, desiredMonthlyIncome))
+
+	return asset
 }
 
-/*CalculateMagicNumber  calculates the amount of assets need to buy the asset itself with the dividends
-MagicNumber: assetPrice / assetYield = assetQuantity */
+//CalculateMagicNumber  calculates the amount of assets need to buy the asset itself with the dividends
+// MagicNumber: assetPrice / assetYield = assetQuantity
 func calculateMagicNumber(assetPrice float64, assetYieldAvarage24M float64) float64 {
 	return math.Round(assetPrice / assetYieldAvarage24M)
 }
@@ -43,20 +47,15 @@ func calculateCapitalInvestedSnowball(assetPrice float64, magicNumber float64) f
 	return assetPrice * magicNumber
 }
 
-//CalculateDesiredMonthlyIncome calculates the amount of capital needed to reach the desired monthly income from dividends ( (desired income/yield) * price)
+//CalculateDesiredMonthlyIncome calculates the amount of capital needed to reach the desired monthly income from dividends
+// ( (desired income/yield) * price)
 func calculateDesiredMonthlyIncome(assetPrice float64, assetYieldAvarage24M float64, desiredMonthlyIncome float64) float64 {
 	return (desiredMonthlyIncome / assetYieldAvarage24M) * assetPrice
 }
 
 //BuildJSON ...
-func BuildJSON(req *asset.ToStringConverted) []byte {
-
-	a := &assetModel.ToStringConverted{
-		Asset:      req.Asset,
-		Investment: req.Investment,
-	}
-
-	assetJSON, err := json.Marshal(a)
+func BuildJSON(req *assetModel.Model) []byte {
+	assetJSON, err := json.Marshal(req)
 	if err != nil {
 		fmt.Println(err)
 	}

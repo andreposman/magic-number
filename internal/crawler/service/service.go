@@ -62,11 +62,12 @@ func FindAsset(req *assetModel.Request) *assetModel.Model {
 	asset := new(assetModel.Model)
 	a := req.AssetSymbol
 	HTML := GetHTML(a)
-	assetElements := assetModel.Model{
+
+	assetElements := assetModel.Elements{
 		Symbol:               req.AssetSymbol,
 		Name:                 "#main-header > div > div > div:nth-child(1) > h1 > small",
 		Price:                "#main-2 > div.container.pb-7 > div.top-info.d-flex.flex-wrap.justify-between.mb-3.mb-md-5 > div.info.special.w-100.w-md-33.w-lg-20 > div > div:nth-child(1) > strong",
-		YieldAvarage24M:      "#main-2 > div.container.pb-7 > div:nth-child(6) > div > div > div:nth-child(1) > div > div > strong",
+		YieldAverage24M:      "#main-2 > div.container.pb-7 > div:nth-child(6) > div > div > div:nth-child(1) > div > div > strong",
 		DividendYield:        "#main-2 > div.container.pb-7 > div.top-info.d-flex.flex-wrap.justify-between.mb-3.mb-md-5 > div:nth-child(4) > div > div:nth-child(1) > strong",
 		MinPrice52Week:       "#main-2 > div.container.pb-7 > div.top-info.d-flex.flex-wrap.justify-between.mb-3.mb-md-5 > div:nth-child(2) > div > div:nth-child(1) > strong",
 		MaxPrice52Week:       "#main-2 > div.container.pb-7 > div.top-info.d-flex.flex-wrap.justify-between.mb-3.mb-md-5 > div:nth-child(3) > div > div:nth-child(1) > strong",
@@ -74,20 +75,13 @@ func FindAsset(req *assetModel.Request) *assetModel.Model {
 		PerformanceThisMonth: "#main-2 > div.container.pb-7 > div.top-info.d-flex.flex-wrap.justify-between.mb-3.mb-md-5 > div:nth-child(5) > div > div.d-flex.justify-between > div > span.sub-value > b",
 	}
 
-	symbol := strings.TrimSpace(strings.ToUpper(req.AssetSymbol))
-	price := strings.Replace(HTML.Find(assetElements.Price).Text(), ",", ".", 1)
-	yieldAvarage24M := strings.Replace(HTML.Find(assetElements.YieldAvarage24M).Text(), ",", ".", 1)
-	dividendYield := strings.Replace(HTML.Find(assetElements.DividendYield).Text(), ",", ".", 1)
-	minPrice52Week := strings.Replace(HTML.Find(assetElements.MinPrice52Week).Text(), ",", ".", 1)
-	maxPrice52Week := strings.Replace(HTML.Find(assetElements.MaxPrice52Week).Text(), ",", ".", 1)
-
-	asset.Symbol = symbol
+	asset.Symbol = req.AssetSymbol
 	asset.Name = HTML.Find(assetElements.Name).Text()
-	asset.Price = price
-	asset.YieldAvarage24M = yieldAvarage24M
-	asset.DividendYield = dividendYield
-	asset.MinPrice52Week = minPrice52Week
-	asset.MaxPrice52Week = maxPrice52Week
+	asset.Price = strings.Replace(HTML.Find(assetElements.Price).Text(), ",", ".", 1)
+	asset.YieldAverage24M = strings.Replace(HTML.Find(assetElements.YieldAverage24M).Text(), ",", ".", 1)
+	asset.DividendYield = strings.Replace(HTML.Find(assetElements.DividendYield).Text(), ",", ".", 1)
+	asset.MinPrice52Week = strings.Replace(HTML.Find(assetElements.MinPrice52Week).Text(), ",", ".", 1)
+	asset.MaxPrice52Week = strings.Replace(HTML.Find(assetElements.MaxPrice52Week).Text(), ",", ".", 1)
 	asset.PerformanceLast12M = HTML.Find(assetElements.PerformanceLast12M).Text()
 	asset.PerformanceThisMonth = HTML.Find(assetElements.PerformanceThisMonth).Text()
 	asset.Goals.DesiredMonthlyIncome = req.DesiredMonthlyIncome

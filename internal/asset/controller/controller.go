@@ -6,21 +6,21 @@ import (
 )
 
 //CalculateGoals ...
-func CalculateGoals(asset *asset.Model) *asset.ToStringConverted {
-	s := service.CalculateGoals(asset)
+func CalculateGoals(asset *asset.Model) *asset.Model {
+	s := service.CalculateInvestmentGoals(asset)
 
 	return s
 }
 
 //GetAsset ...
-func GetAsset(req *asset.Request) *asset.ToStringConverted {
+func GetAsset(req *asset.Request) *asset.Model {
 	a := service.GetAsset(req)
 
 	return a
 }
 
 //ReturnJSON ...
-func ReturnJSON(req *asset.ToStringConverted) []byte {
+func ReturnJSON(req *asset.Model) []byte {
 	a := service.BuildJSON(req)
 
 	return a

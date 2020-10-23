@@ -14,7 +14,7 @@ func ToString(assetNumber *assetModel.ToNumberConverted) *assetModel.ToStringCon
 	a.Asset.Symbol = assetNumber.Asset.Symbol
 	a.Asset.Name = assetNumber.Asset.Name
 	a.Asset.Price = strconv.FormatFloat(assetNumber.Asset.Price, 'f', 2, 64)
-	a.Asset.YieldAvarage24M = strconv.FormatFloat(assetNumber.Asset.YieldAvarage24M, 'f', 5, 64)
+	a.Asset.YieldAverage24M = strconv.FormatFloat(assetNumber.Asset.YieldAvarage24M, 'f', -1, 64)
 	a.Asset.DividendYield = strconv.FormatFloat(assetNumber.Asset.DividendYield, 'f', 2, 64)
 	a.Asset.MinPrice52Week = strconv.FormatFloat(assetNumber.Asset.MinPrice52Week, 'f', 2, 64)
 	a.Asset.MaxPrice52Week = strconv.FormatFloat(assetNumber.Asset.MaxPrice52Week, 'f', 2, 64)
@@ -36,7 +36,7 @@ func ToFloat(assetString *assetModel.Model) *assetModel.ToNumberConverted {
 	if err != nil {
 		fmt.Println(err)
 	}
-	yieldAvarage24M, err := strconv.ParseFloat(assetString.YieldAvarage24M, 5)
+	yieldAvarage24M, err := strconv.ParseFloat(assetString.YieldAverage24M, 5)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -56,20 +56,6 @@ func ToFloat(assetString *assetModel.Model) *assetModel.ToNumberConverted {
 	if err != nil {
 		fmt.Println(err)
 	}
-	// magicNumber, err := strconv.ParseFloat(assetString.Goals.MagicNumber, 2)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	// capitalSnowBallEffect, err := strconv.ParseFloat(assetString.Goals.CapitalSnowBallEffect, 2)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	// capitalDesiredMonthlyIncome, err := strconv.ParseFloat(assetString.Goals.CapitalDesiredMonthlyIncome, 2)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
 
 	a.Asset.Symbol = assetString.Symbol
 	a.Asset.Name = assetString.Name
@@ -81,9 +67,49 @@ func ToFloat(assetString *assetModel.Model) *assetModel.ToNumberConverted {
 	a.Asset.PerformanceLast12M = assetString.PerformanceLast12M
 	a.Asset.PerformanceThisMonth = assetString.PerformanceThisMonth
 	a.InvestmentGoals.DesiredMonthlyIncome = desiredMonthlyIncome
-	// a.InvestmentGoals.MagicNumber = magicNumber
-	// a.InvestmentGoals.CapitalSnowBallEffect = capitalSnowBallEffect
-	// a.InvestmentGoals.CapitalDesiredMonthlyIncome = capitalDesiredMonthlyIncome
 
 	return a
+}
+
+// ToExpectedString ...
+func ToExpectedString(value float64) string {
+	valueString := strconv.FormatFloat(value, 'f', 2, 64)
+
+	return valueString
+}
+
+// ToYieldAvarageString ...
+func ToYieldAvarageString(value float64) string {
+	valueString := strconv.FormatFloat(value, 'f', 5, 64)
+
+	return valueString
+}
+
+// ToMagicNumberString ...
+func ToMagicNumberString(value float64) string {
+	valueString := strconv.FormatFloat(value, 'f', 0, 64)
+
+	return valueString
+}
+
+// ToExpectedFloat ...
+func ToExpectedFloat(text string) float64 {
+	value, err := strconv.ParseFloat(text, 64)
+	if err != nil {
+		fmt.Print("\nToExpectedFloat\n")
+		fmt.Println(err)
+	}
+
+	return value
+}
+
+// ToYieldAverageFloat ...
+func ToYieldAverageFloat(text string) float64 {
+	value, err := strconv.ParseFloat(text, 64)
+	if err != nil {
+		fmt.Print("\nToYieldAverageFloat\n")
+		fmt.Println(err)
+	}
+
+	return value
 }

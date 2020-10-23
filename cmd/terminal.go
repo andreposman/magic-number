@@ -12,20 +12,20 @@ import (
 )
 
 //PrintDataTable print a "pretty" table on the terminal
-func PrintDataTable(asset *assetModel.ToStringConverted) {
+func PrintDataTable(asset *assetModel.Model) {
 	fmt.Printf("\n\n")
 
 	dataAsset := [][]string{
 		[]string{
-			"\n" + asset.Asset.Symbol,
-			"\n" + asset.Asset.Name,
-			"\n" + "R$" + asset.Asset.Price,
-			"\n" + "R$" + asset.Asset.YieldAvarage24M,
-			"\n" + asset.Asset.DividendYield + "%",
-			"\n" + "R$" + asset.Asset.MinPrice52Week,
-			"\n" + "R$" + asset.Asset.MaxPrice52Week,
-			"\n" + asset.Asset.PerformanceLast12M,
-			"\n" + asset.Asset.PerformanceThisMonth,
+			"\n" + asset.Symbol,
+			"\n" + asset.Name,
+			"\n" + "R$" + asset.Price,
+			"\n" + "R$" + asset.YieldAverage24M,
+			"\n" + asset.DividendYield + "%",
+			"\n" + "R$" + asset.MinPrice52Week,
+			"\n" + "R$" + asset.MaxPrice52Week,
+			"\n" + asset.PerformanceLast12M,
+			"\n" + asset.PerformanceThisMonth,
 		}}
 
 	tableAsset := tablewriter.NewWriter(os.Stdout)
@@ -55,8 +55,8 @@ func PrintDataTable(asset *assetModel.ToStringConverted) {
 
 	dataMagicNumber := [][]string{
 		[]string{
-			asset.Investment.MagicNumber,
-			"R$" + asset.Investment.CapitalSnowBallEffect,
+			asset.Goals.MagicNumber,
+			"R$" + asset.Goals.CapitalSnowBallEffect,
 		}}
 
 	tableMagicNumber := tablewriter.NewWriter(os.Stdout)
@@ -77,12 +77,12 @@ func PrintDataTable(asset *assetModel.ToStringConverted) {
 
 	dataCapital := [][]string{
 		[]string{
-			"R$" + asset.Investment.CapitalDesiredMonthlyIncome,
+			"R$" + asset.Goals.CapitalDesiredMonthlyIncome,
 		}}
 
 	tableCapital := tablewriter.NewWriter(os.Stdout)
 	tableCapital.SetHeader([]string{
-		"CAPITAL FOR\nDESIRED MONTHLY INCOME OF R$" + asset.Investment.DesiredMonthlyIncome,
+		"CAPITAL FOR\nDESIRED MONTHLY INCOME OF R$" + asset.Goals.DesiredMonthlyIncome,
 	})
 	tableCapital.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
 	tableCapital.SetAutoWrapText(true)
