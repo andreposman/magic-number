@@ -6,27 +6,24 @@ import (
 	"math"
 
 	assetModel "github.com/andreposman/magic-number/internal/asset/model"
-	"github.com/andreposman/magic-number/internal/crawler/service"
+	"github.com/andreposman/magic-number/internal/asset/repository"
 	"github.com/andreposman/magic-number/internal/helpers/converter"
 )
 
 //GetAsset ...
-func GetAsset(req *assetModel.Request) *assetModel.Model {
-	a := service.FindAsset(req)
-	asset := CalculateInvestmentGoals(a)
+func GetAsset(req *assetModel.Request) *assetModel.Asset {
+	asset := repository.FindAsset(req)
+	assetCalculated := CalculateInvestmentGoals(asset)
+	// a := service.FindAsset(req)
 
-	return asset
+	return assetCalculated
 }
 
 //CalculateInvestmentGoals ...
-func CalculateInvestmentGoals(asset *assetModel.Model) *assetModel.Model {
-	fmt.Print("\nPrice: ", asset.Price)
+func CalculateInvestmentGoals(asset *assetModel.Asset) *assetModel.Asset {
+
 	price := converter.ToExpectedFloat(asset.Price)
-
-	fmt.Print("\nyieldAverage24M: ", asset.YieldAverage24M)
 	yieldAverage24M := converter.ToYieldAverageFloat(asset.YieldAverage24M)
-
-	fmt.Print("\ndesiredMonthlyIncome: ", asset.Goals.DesiredMonthlyIncome)
 	desiredMonthlyIncome := converter.ToExpectedFloat(asset.Goals.DesiredMonthlyIncome)
 
 	asset.Goals.MagicNumber = converter.ToExpectedString(calculateMagicNumber(price, yieldAverage24M))
@@ -54,7 +51,7 @@ func calculateDesiredMonthlyIncome(assetPrice float64, assetYieldAvarage24M floa
 }
 
 //BuildJSON ...
-func BuildJSON(req *assetModel.Model) []byte {
+func BuildJSON(req *assetModel.Asset) []byte {
 	assetJSON, err := json.Marshal(req)
 	if err != nil {
 		fmt.Println(err)

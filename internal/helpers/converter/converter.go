@@ -29,7 +29,7 @@ func ToString(assetNumber *assetModel.ToNumberConverted) *assetModel.ToStringCon
 }
 
 //ToFloat converts type Asset and Goal to strings
-func ToFloat(assetString *assetModel.Model) *assetModel.ToNumberConverted {
+func ToFloat(assetString *assetModel.Asset) *assetModel.ToNumberConverted {
 	a := new(assetModel.ToNumberConverted)
 
 	price, err := strconv.ParseFloat(assetString.Price, 2)

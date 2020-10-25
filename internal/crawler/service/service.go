@@ -12,14 +12,14 @@ import (
 	"github.com/andreposman/magic-number/internal/config"
 
 	assetModel "github.com/andreposman/magic-number/internal/asset/model"
-	model "github.com/andreposman/magic-number/internal/crawler/model"
+	crawlerModel "github.com/andreposman/magic-number/internal/crawler/model"
 )
 
 //buildCrawler ...
-func buildCrawler(req string) *model.Crawler {
+func buildCrawler(req string) *crawlerModel.Crawler {
 	req = strings.TrimSpace(strings.ToUpper(req))
 
-	crawler := new(model.Crawler)
+	crawler := new(crawlerModel.Crawler)
 	crawler.AssetSymbol = req
 	crawler.URL = config.GetURL() + crawler.AssetSymbol
 
@@ -58,8 +58,8 @@ func GetHTML(req string) *goquery.Document {
 }
 
 //FindAsset finds and parse the asset from the page
-func FindAsset(req *assetModel.Request) *assetModel.Model {
-	asset := new(assetModel.Model)
+func FindAsset(req *assetModel.Request) *assetModel.Asset {
+	asset := new(assetModel.Asset)
 	a := req.AssetSymbol
 	HTML := GetHTML(a)
 

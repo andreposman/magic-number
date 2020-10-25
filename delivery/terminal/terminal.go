@@ -1,4 +1,4 @@
-package cmd
+package terminal
 
 import (
 	"bufio"
@@ -12,7 +12,7 @@ import (
 )
 
 //PrintDataTable print a "pretty" table on the terminal
-func PrintDataTable(asset *assetModel.Model) {
+func PrintDataTable(asset *assetModel.Asset) {
 	fmt.Printf("\n\n")
 
 	dataAsset := [][]string{

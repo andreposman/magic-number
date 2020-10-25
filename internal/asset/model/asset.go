@@ -1,20 +1,20 @@
 package asset
 
-//Model is the model of the asset elements scrapped by the crawler
+//Elements is the model of the html elements scrapped by the crawler
 type Elements struct {
-	Symbol               string `json:"symbol"`
-	Name                 string `json:"name"`
-	Price                string `json:"price"`
-	YieldAverage24M      string `json:"yieldAverage24m"`
-	DividendYield        string `json:"dividendYield"`
-	MinPrice52Week       string `json:"minPrice52wk"`
-	MaxPrice52Week       string `json:"maxPrice52wk"`
-	PerformanceLast12M   string `json:"performanceLast12m"`
-	PerformanceThisMonth string `json:"performanceThisMonth"`
+	Symbol               string
+	Name                 string
+	Price                string
+	YieldAverage24M      string
+	DividendYield        string
+	MinPrice52Week       string
+	MaxPrice52Week       string
+	PerformanceLast12M   string
+	PerformanceThisMonth string
 }
 
-//Model is the model of the asset elements scrapped by the crawler
-type Model struct {
+//Asset is the model that contains the value of the asset
+type Asset struct {
 	Symbol               string `json:"symbol"`
 	Name                 string `json:"name"`
 	Price                string `json:"price"`
@@ -64,7 +64,7 @@ type Request struct {
 
 //ToStringConverted is the result of float64 to string
 type ToStringConverted struct {
-	Asset      Model `json:"asset"`
+	Asset      Asset `json:"asset"`
 	Investment Goals `json:"investment"`
 }
 
