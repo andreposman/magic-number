@@ -21,7 +21,7 @@ func PrintDataTable(asset *assetModel.Asset) {
 			"\n" + asset.Name,
 			"\n" + "R$" + asset.Price,
 			"\n" + "R$" + asset.YieldAverage24M,
-			"\n" + asset.DividendYield + "%",
+			"\n" + asset.DividendYield,
 			"\n" + "R$" + asset.MinPrice52Week,
 			"\n" + "R$" + asset.MaxPrice52Week,
 			"\n" + asset.PerformanceLast12M,
@@ -77,11 +77,13 @@ func PrintDataTable(asset *assetModel.Asset) {
 
 	dataCapital := [][]string{
 		[]string{
+			asset.Goals.AssetQuantityDesiredIncome,
 			"R$" + asset.Goals.CapitalDesiredMonthlyIncome,
 		}}
 
 	tableCapital := tablewriter.NewWriter(os.Stdout)
 	tableCapital.SetHeader([]string{
+		"ASSET QTY \nFOR DESIRED MONTLY INCOME",
 		"CAPITAL FOR\nDESIRED MONTHLY INCOME OF R$" + asset.Goals.DesiredMonthlyIncome,
 	})
 	tableCapital.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
@@ -123,7 +125,10 @@ func ReadDesiredMonthlyIncomeFromTerminal() string {
 		fmt.Println(err)
 	}
 	desiredMonthlyIncome = strings.TrimSpace(desiredMonthlyIncome)
-	desiredMonthlyIncome = strings.ToUpper(desiredMonthlyIncome)
+
+	if strings.Contains(desiredMonthlyIncome, ",") {
+		desiredMonthlyIncome = strings.Replace(desiredMonthlyIncome, ",", ".", 1)
+	}
 
 	f, err := strconv.ParseFloat(desiredMonthlyIncome, 32)
 	if f <= 0 || err != nil {

@@ -16,11 +16,16 @@ List of TODOs:
 	// TODO: asset controller/service
 	// TODO: more validations
 	// TODO: return in json
-	TODO: Fix names
-	TODO: implement repository pattern
-	TODO: docker
-	TODO: logs
+	// TODO: implement repository pattern
+	// TODO: Fix names
+	TODO: Review code (func names and code organization)
+	TODO: Tests
+	TODO: replace possible commas for dots in desired income
+	TODO: Fix Bug when desired income is 1
 	TODO: README
+	TODO: API
+	TODO: Logs
+	TODO: Docker
 */
 
 func main() {

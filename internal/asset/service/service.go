@@ -4,55 +4,80 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"os"
 
 	assetModel "github.com/andreposman/magic-number/internal/asset/model"
 	"github.com/andreposman/magic-number/internal/asset/repository"
-	"github.com/andreposman/magic-number/internal/helpers/converter"
 )
 
 //GetAsset ...
 func GetAsset(req *assetModel.Request) *assetModel.Asset {
-	asset := repository.FindAsset(req)
-	assetCalculated := CalculateInvestmentGoals(asset)
-	// a := service.FindAsset(req)
-
-	return assetCalculated
+	return buildAsset(req)
 }
 
-//CalculateInvestmentGoals ...
-func CalculateInvestmentGoals(asset *assetModel.Asset) *assetModel.Asset {
-
-	price := converter.ToExpectedFloat(asset.Price)
-	yieldAverage24M := converter.ToYieldAverageFloat(asset.YieldAverage24M)
-	desiredMonthlyIncome := converter.ToExpectedFloat(asset.Goals.DesiredMonthlyIncome)
-
-	asset.Goals.MagicNumber = converter.ToExpectedString(calculateMagicNumber(price, yieldAverage24M))
-	asset.Goals.CapitalSnowBallEffect = converter.ToExpectedString(calculateCapitalInvestedSnowball(price, converter.ToExpectedFloat(asset.Goals.MagicNumber)))
-	asset.Goals.CapitalDesiredMonthlyIncome = converter.ToExpectedString(calculateDesiredMonthlyIncome(price, yieldAverage24M, desiredMonthlyIncome))
+//buildAsset finds and calculates the asset data
+func buildAsset(req *assetModel.Request) *assetModel.Asset {
+	assetRaw := repository.FindAsset(req)
+	calculationData := repository.AssetCalculation(assetRaw)
+	assetCalculated := calculateInvestmentGoals(calculationData)
+	asset := repository.GetAsset(assetRaw, assetCalculated)
 
 	return asset
+}
+
+//calculateInvestmentGoals ...
+func calculateInvestmentGoals(calculationData *assetModel.AssetDataFloat) *assetModel.AssetDataFloat {
+
+	calculationData.MagicNumber = calculateMagicNumber(calculationData.Price, calculationData.YieldAvarage24M)
+	calculationData.CapitalSnowBallEffect = calculateCapitalInvestedSnowball(calculationData.Price, calculationData.MagicNumber)
+	calculationData.CapitalDesiredMonthlyIncome = calculateDesiredMonthlyIncome(calculationData.Price, calculationData.YieldAvarage24M, calculationData.DesiredMonthlyIncome)
+	calculationData.AssetQuantityDesiredIncome = calculateQuantityDesiredIncome(calculationData.Price, calculationData.CapitalDesiredMonthlyIncome)
+	return calculationData
 }
 
 //CalculateMagicNumber  calculates the amount of assets need to buy the asset itself with the dividends
 // MagicNumber: assetPrice / assetYield = assetQuantity
 func calculateMagicNumber(assetPrice float64, assetYieldAvarage24M float64) float64 {
-	return math.Round(assetPrice / assetYieldAvarage24M)
+	if assetPrice <= 0 || assetYieldAvarage24M <= 0 {
+		fmt.Fprintf(os.Stderr, "\n\nError: %v\n", "Price/Yield must be greater than zero")
+		os.Exit(-1)
+	}
+
+	return float64(int64(math.Round(assetPrice / assetYieldAvarage24M)))
 }
 
 //CalculateCapitalInvestedSnowball calculates amount of money needed for the snowball effect
 func calculateCapitalInvestedSnowball(assetPrice float64, magicNumber float64) float64 {
+	if assetPrice <= 0 || magicNumber <= 0 {
+		fmt.Fprintf(os.Stderr, "\n\nError: %v\n", "Price/Magic Number must be greater than zero")
+		os.Exit(-1)
+	}
 	return assetPrice * magicNumber
+}
+
+//calculateQuantityDesiredIncome
+func calculateQuantityDesiredIncome(assetPrice float64, capitalDesiredMonthlyIncome float64) float64 {
+	if assetPrice <= 0 || capitalDesiredMonthlyIncome <= 0 {
+		fmt.Fprintf(os.Stderr, "\n\nError: %v\n", "Price/Capital for Desired Monthly Income must be greater than zero")
+		os.Exit(-1)
+	}
+
+	return (capitalDesiredMonthlyIncome / assetPrice)
 }
 
 //CalculateDesiredMonthlyIncome calculates the amount of capital needed to reach the desired monthly income from dividends
 // ( (desired income/yield) * price)
 func calculateDesiredMonthlyIncome(assetPrice float64, assetYieldAvarage24M float64, desiredMonthlyIncome float64) float64 {
+	if assetPrice <= 0 || assetYieldAvarage24M <= 0 || desiredMonthlyIncome <= 0 {
+		fmt.Fprintf(os.Stderr, "\n\nError: %v\n", "Price/Yield/Desired Monthly Income must be greater than zero")
+		os.Exit(-1)
+	}
 	return (desiredMonthlyIncome / assetYieldAvarage24M) * assetPrice
 }
 
 //BuildJSON ...
-func BuildJSON(req *assetModel.Asset) []byte {
-	assetJSON, err := json.Marshal(req)
+func BuildJSON(asset *assetModel.Asset) []byte {
+	assetJSON, err := json.Marshal(asset)
 	if err != nil {
 		fmt.Println(err)
 	}
