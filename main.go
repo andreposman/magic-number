@@ -1,9 +1,7 @@
 package main
 
 import (
-	"github.com/andreposman/magic-number/delivery/terminal"
-	"github.com/andreposman/magic-number/internal/asset/controller"
-	assetModel "github.com/andreposman/magic-number/internal/asset/model"
+	api "github.com/andreposman/magic-number/delivery/api"
 )
 
 /*
@@ -18,26 +16,27 @@ List of TODOs:
 	// TODO: return in json
 	// TODO: implement repository pattern
 	// TODO: Fix names
+	TODO: API
 	TODO: Review code (func names and code organization)
 	TODO: Tests
 	TODO: replace possible commas for dots in desired income
 	TODO: Fix Bug when desired income is 1
 	TODO: README
-	TODO: API
 	TODO: Logs
 	TODO: Docker
 */
 
 func main() {
-	request := new(assetModel.Request)
+	// request := new(assetModel.Request)
 	// request.AssetSymbol = config.DebugData().Asset
 	// request.DesiredMonthlyIncome = config.DebugData().DesiredMonthlyIncome
 
-	request.AssetSymbol = terminal.ReadAssetSymbolFromTerminal()
-	request.DesiredMonthlyIncome = terminal.ReadDesiredMonthlyIncomeFromTerminal()
+	// request.AssetSymbol = terminal.ReadAssetSymbolFromTerminal()
+	// request.DesiredMonthlyIncome = terminal.ReadDesiredMonthlyIncomeFromTerminal()
 
-	asset := controller.GetAsset(request)
+	// asset := controller.GetAsset(request)
 
-	terminal.PrintDataTable(asset)
-	controller.ReturnJSON(asset)
+	// terminal.PrintDataTable(asset)
+	// controller.ReturnJSON(asset)
+	api.Init()
 }
