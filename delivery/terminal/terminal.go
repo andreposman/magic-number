@@ -83,7 +83,7 @@ func PrintDataTable(asset *assetModel.Asset) {
 
 	tableCapital := tablewriter.NewWriter(os.Stdout)
 	tableCapital.SetHeader([]string{
-		"ASSET QTY \nFOR DESIRED MONTLY INCOME",
+		"ASSET QUANTITY \nFOR DESIRED MONTLY INCOME",
 		"CAPITAL FOR\nDESIRED MONTHLY INCOME OF R$" + asset.Goals.DesiredMonthlyIncome,
 	})
 	tableCapital.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
