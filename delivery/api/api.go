@@ -1,14 +1,23 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/andreposman/magic-number/internal/asset/controller"
+	assetModel "github.com/andreposman/magic-number/internal/asset/model"
+	"github.com/andreposman/magic-number/internal/config"
+	"github.com/gin-gonic/gin"
+)
 
 func Init() {
+	request := new(assetModel.Request)
+	request.AssetSymbol = config.DebugData().Asset
+	request.DesiredMonthlyIncome = config.DebugData().DesiredMonthlyIncome
+
+	asset := controller.GetAsset(request)
+
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
+	r.GET("/asset", func(c *gin.Context) {
+		c.JSON(200, gin.H{"asset": asset})
 	})
 
-	r.Run()
+	r.Run(":8080")
 }
