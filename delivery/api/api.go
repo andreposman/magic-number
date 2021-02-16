@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Init serves the endpoint that recieves the request and then output the calculation results
 func Init() {
 	request := new(assetModel.Request)
 	request.AssetSymbol = config.DebugData().Asset

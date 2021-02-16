@@ -21,11 +21,12 @@ List of TODOs:
 	// TODO: Fix Bug when desired income is 1
 	// TODO: API
 	// TODO: Review code (func names and code organization)
-	TODO: Tests
+	TODO: Improve Tests
 	TODO: replace possible commas for dots in desired income
-	TODO: README
 	TODO: Logs
 	TODO: Docker
+	TODO: README
+	TODO: start the Flutter app and consume the api
 */
 
 func main() {
