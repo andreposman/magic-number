@@ -1,17 +1,26 @@
 package api
 
 import (
+	"os"
+
 	assetModel "github.com/andreposman/magic-number/internal/asset/model"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 // Init serves the endpoint that recieves the request and then output the calculation results
 func Init(asset *assetModel.Asset) {
-	r := gin.Default()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9000" // Default port if not specified
+	}
 
-	r.GET("/asset", func(c *gin.Context) {
+	router := gin.Default()
+	router.Use(cors.Default())
+
+	router.GET("/asset", func(c *gin.Context) {
 		c.JSON(200, gin.H{"asset": asset})
 	})
 
-	r.Run(":8080")
+	router.Run(":" + port)
 }
