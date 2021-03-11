@@ -1,6 +1,7 @@
 package api
 
 import (
+	"net/http"
 	"os"
 
 	assetModel "github.com/andreposman/magic-number/internal/asset/model"
@@ -19,7 +20,7 @@ func Init(asset *assetModel.Asset) {
 	router.Use(cors.Default())
 
 	router.GET("/asset", func(c *gin.Context) {
-		c.JSON(200, gin.H{"asset": asset})
+		c.JSON(http.StatusOK, gin.H{"asset": asset})
 	})
 
 	router.Run(":" + port)

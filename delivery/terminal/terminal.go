@@ -3,6 +3,7 @@ package terminal
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -132,7 +133,8 @@ func ReadDesiredMonthlyIncomeFromTerminal() string {
 
 	f, err := strconv.ParseFloat(desiredMonthlyIncome, 32)
 	if f <= 0 || err != nil {
-		fmt.Printf("\nDesired monthly income must be a number, greater than 0.\n\n")
+		// fmt.Printf("\nDesired monthly income must be a number, greater than 0.\n\n")
+		log.Fatal("\nDesired monthly income must be a number, greater than 0.\n\n")
 		os.Exit(-1)
 	}
 

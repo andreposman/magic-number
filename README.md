@@ -1,4 +1,16 @@
 # Magic-number
+<!-- 
+List of TODOs:
+	TODO: Tests
+	TODO: Logs
+	TODO: Docker
+	TODO: start the Flutter app and consume the api
+ -->
+
+## Architecture
+
+![architecture](architecurte-magic-number.jpg)
+
 
 ## Calculate passive income
 
