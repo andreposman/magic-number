@@ -36,7 +36,9 @@ func ScrapeHTML(symbol string) *goquery.Document {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	defer res.Body.Close()
+
 	if res.StatusCode != 200 {
 		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
 	}
@@ -46,7 +48,6 @@ func ScrapeHTML(symbol string) *goquery.Document {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	AssetNotFound := HTML.Find(NotFoundElement).Text()
 	if len(AssetNotFound) > 0 {
 		fmt.Fprintf(os.Stderr, "\n\nError: %v\n", "Asset does not exist")

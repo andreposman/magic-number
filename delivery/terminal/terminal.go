@@ -3,6 +3,7 @@ package terminal
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -83,7 +84,7 @@ func PrintDataTable(asset *assetModel.Asset) {
 
 	tableCapital := tablewriter.NewWriter(os.Stdout)
 	tableCapital.SetHeader([]string{
-		"ASSET QTY \nFOR DESIRED MONTLY INCOME",
+		"ASSET QUANTITY \nFOR DESIRED MONTLY INCOME",
 		"CAPITAL FOR\nDESIRED MONTHLY INCOME OF R$" + asset.Goals.DesiredMonthlyIncome,
 	})
 	tableCapital.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
@@ -132,7 +133,8 @@ func ReadDesiredMonthlyIncomeFromTerminal() string {
 
 	f, err := strconv.ParseFloat(desiredMonthlyIncome, 32)
 	if f <= 0 || err != nil {
-		fmt.Printf("\nDesired monthly income must be a number, greater than 0.\n\n")
+		// fmt.Printf("\nDesired monthly income must be a number, greater than 0.\n\n")
+		log.Fatal("\nDesired monthly income must be a number, greater than 0.\n\n")
 		os.Exit(-1)
 	}
 

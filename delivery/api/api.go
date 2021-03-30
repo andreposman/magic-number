@@ -2,22 +2,26 @@ package api
 
 import (
 	"net/http"
-	"strings"
+	"os"
 
+	assetModel "github.com/andreposman/magic-number/internal/asset/model"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-func Init() {
-	r := gin.Default()
+// Init serves the endpoint that recieves the request and then output the calculation results
+func Init(asset *assetModel.Asset) {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9000" // Default port if not specified
+	}
 
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
+	router := gin.Default()
+	router.Use(cors.Default())
 
-	r.GET("v1/asset/:asset", func(c *gin.Context) {
-		asset := c.Param("asset")
-
-		c.String(http.StatusOK, "\nThe asset selected was: %s\n", strings.ToUpper(asset))
+	router.GET("/asset", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"asset": asset})
 	})
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 
+	router.Run(":" + port)
 }
