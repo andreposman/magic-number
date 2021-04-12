@@ -23,8 +23,8 @@ func main() {
 	// request.AssetSymbol = config.DebugData().Asset
 	// request.DesiredMonthlyIncome = config.DebugData().DesiredMonthlyIncome
 
-	// request.AssetSymbol = terminal.ReadAssetSymbolFromTerminal()
-	// request.DesiredMonthlyIncome = terminal.ReadDesiredMonthlyIncomeFromTerminal()
+	request.AssetSymbol = terminal.ReadAssetSymbolFromTerminal()
+	request.DesiredMonthlyIncome = terminal.ReadDesiredMonthlyIncomeFromTerminal()
 
 	asset := controller.GetAsset(request)
 
