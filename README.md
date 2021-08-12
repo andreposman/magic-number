@@ -15,7 +15,8 @@ List of TODOs:
 ## Calculate passive income
 
 <br>
-- With Go installed on your machine, run ```go run main.go```
+
+- With Go installed on your machine, run `go run main.go`
 
 - Type in your [FII](https://fiis.com.br/artigos/o-que-e-fii/) _(ex: HGLG11)_
 
