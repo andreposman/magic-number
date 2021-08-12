@@ -1,16 +1,21 @@
 package controller
 
 import (
-	assetModel "github.com/andreposman/magic-number/internal/asset/model"
+	asset "github.com/andreposman/magic-number/internal/asset/model"
 	"github.com/andreposman/magic-number/internal/asset/service"
 )
 
-//GetAsset ...
-func GetAsset(req *assetModel.Request) *assetModel.Asset {
-	return service.GetAsset(req)
+func GetAsset(req *asset.Request) (*asset.Asset, error) {
+	result, err := service.GetAsset(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+
 }
 
 //ReturnJSON ...
-func ReturnJSON(req *assetModel.Asset) []byte {
+func ReturnJSON(req *asset.Asset) []byte {
 	return service.BuildJSON(req)
 }

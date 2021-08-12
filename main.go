@@ -19,14 +19,17 @@ List of TODOs:
 
 func main() {
 
-	request := new(asset.Request)
+	var request asset.Request
 	// request.AssetSymbol = config.DebugData().Asset
 	// request.DesiredMonthlyIncome = config.DebugData().DesiredMonthlyIncome
 
 	request.AssetSymbol = terminal.ReadAssetSymbolFromTerminal()
 	request.DesiredMonthlyIncome = terminal.ReadDesiredMonthlyIncomeFromTerminal()
 
-	asset := controller.GetAsset(request)
+	asset, err := controller.GetAsset(&request)
+	if err != nil {
+		panic(err)
+	}
 
 	terminal.PrintDataTable(asset)
 	api.Init(asset)

@@ -28,6 +28,7 @@ List of TODOs:
 
 ### Console output example:
 
+_terminal has to be maximized to get a pretty output_
 ![results](magic-number-results.png)
 
 ### JSON output example:

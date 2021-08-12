@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 	"os"
@@ -10,9 +11,14 @@ import (
 	"github.com/andreposman/magic-number/internal/asset/repository"
 )
 
-//GetAsset ...
-func GetAsset(req *assetModel.Request) *assetModel.Asset {
-	return buildAsset(req)
+//GetAsset goes to the web and gets the asset that the user requested
+func GetAsset(req *assetModel.Request) (*assetModel.Asset, error) {
+	result := buildAsset(req)
+	if len(result.Name) < 0 {
+		return nil, errors.New("xxx")
+	}
+
+	return result, nil
 }
 
 //buildAsset finds and calculates the asset data
