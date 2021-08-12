@@ -15,7 +15,11 @@ func TestGetAsset(t *testing.T) {
 		DesiredMonthlyIncome: "1000",
 	}
 
-	result := controller.GetAsset(&req)
+	result, err := controller.GetAsset(&req)
+	if err != nil {
+		t.Errorf("Error: ", err)
+
+	}
 
 	if result.Symbol != "HGLG11" {
 		t.Errorf("Error: Asset does not exist")
