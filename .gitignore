@@ -17,3 +17,6 @@ vendor/
 
 # VSCode
 .vscode/
+
+ideas.md
+.env
