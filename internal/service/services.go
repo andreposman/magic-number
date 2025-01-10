@@ -1,36 +1,16 @@
-package api
+package service
 
 import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
-	"log/slog"
 	"net/http"
 	"strconv"
 
 	"github.com/andreposman/magic-number/internal/models"
 )
 
-func FIIHandler(ticker string) *models.FII {
-	fii, err := getFII(ticker)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	slog.Info(" | FII DATA | ",
-		" | ID", fii.ID,
-		" | Ticker", fii.Ticker,
-		" | FullName", fii.FullName,
-		" | Price", fii.Price,
-		" | DividendYield", fii.DividendYield,
-		" | Segment", fii.Segment,
-	)
-
-	return fii
-}
-
-func getFII(ticker string) (*models.FII, error) {
+func GetFII(ticker string) (*models.FII, error) {
 	fiiList, err := fetchFIIList(ticker)
 	if err != nil {
 		return nil, err
