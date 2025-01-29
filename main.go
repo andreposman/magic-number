@@ -6,5 +6,6 @@ import (
 
 func main() {
 
+	fmt.Println("teste")
 	delivery.StartTerminalLayer()
 }
